@@ -37,7 +37,7 @@ const budgetDropdownContent = document.querySelector(".budget-content");
 let expenses = JSON.parse(localStorage.getItem("expenses")) || []; 
 let incomes = JSON.parse(localStorage.getItem("incomes")) || []; 
 let currentBalance = parseFloat(localStorage.getItem("currentBalance")) || 0.00;
-let categories = JSON.parse(localStorage.getItem("categories")) || ['Food', 'Transport', 'Utilities'];
+let categories = JSON.parse(localStorage.getItem("categories")) || ['Rent', 'Food', 'Transportation', 'Entertainment', 'Personal Care', 'Insurance', 'Car Payment', 'Dining Out', 'Gas', 'Utilities', 'Mortgage', 'Water', 'Internet', 'Phone bill'];
 let budgets = JSON.parse(localStorage.getItem("budgets")) || [];
 let currentOpenDropdown = null;
 
@@ -582,6 +582,108 @@ const loadSavedTheme = function() {
     }
 }
 
+// DARK THEME TOGGLE
+const modeToggle = document.getElementById('mode');
+const budgetContainer = document.getElementById('budgetContainer');
+const incomeContainer = document.getElementById('incomeContainer');
+const expenseContainer = document.getElementById('expenseContainer');
+const balanceContainer = document.getElementById('balanceContainer');
+const inputContainer = document.querySelectorAll('input[type="text"], input[type="number"]');
+const expenseTable = document.querySelector('.expense-table');
+const incomeTable = document.querySelector('.income-table');
+const budgetTable = document.querySelector('.budget-table');
+const tableHeaders = document.querySelectorAll('thead th');
+const rowDividers = document.querySelectorAll('tbody td');
+
+const modeToggleFunction = function(){
+    // DARK MODE
+    if(this.checked){
+        localStorage.setItem('darkMode', 'enabled');
+        budgetContainer.style.backgroundColor = 'var(--dark-pri)';
+        budgetContainer.style.color = 'var(--white-text)';
+        incomeContainer.style.backgroundColor = 'var(--dark-pri)';
+        incomeContainer.style.color = 'var(--white-text)';
+        expenseContainer.style.backgroundColor = 'var(--dark-pri)';
+        expenseContainer.style.color = 'var(--white-text)';
+        balanceContainer.style.backgroundColor = 'var(--dark-pri)';
+        balanceContainer.style.color = 'var(--white-text)';
+        inputContainer.forEach(input => input.style.backgroundColor = 'var(--black-sec)');
+        inputContainer.forEach(input => input.style.color = 'var(--white-text)');
+        expenseTable.style.backgroundColor = 'var(--dark-pri)';
+        expenseTable.style.border = '1px solid var(--black-pri)';
+        incomeTable.style.backgroundColor = 'var(--dark-pri)';
+        incomeTable.style.border = '1px solid var(--black-pri)';
+        budgetTable.style.backgroundColor = 'var(--dark-pri)';
+        budgetTable.style.border = '1px solid var(--black-pri)';
+        tableHeaders.forEach(input => input.style.backgroundColor = 'var(--black-sec)');
+        document.querySelector('.dropDownBtn').style.color = 'var(--white-text)';
+
+        changeBorders('var(--black-pri)', 'var(--black-sec)');
+        changeDuplicateDeleteColor('var(--white-text');
+        bottomTableContainer('var(--black-sec)');
+        changeDropDownColors('var(--black-pri)', 'var(--white-text)');
+    }
+
+    // LIGHT MODE
+    else{
+        localStorage.setItem('darkMode', 'disabled');
+        budgetContainer.style.backgroundColor = 'var(--light-pri)';
+        budgetContainer.style.color = 'var(--black-text)';
+        incomeContainer.style.backgroundColor = 'var(--light-pri)';
+        incomeContainer.style.color = 'var(--black-text)';
+        expenseContainer.style.backgroundColor = 'var(--light-pri)';
+        expenseContainer.style.color = 'var(--black-text)';
+        balanceContainer.style.backgroundColor = 'var(--light-pri)';
+        balanceContainer.style.color = 'var(--black-text)';
+        inputContainer.forEach(input => input.style.backgroundColor = 'var(--light-sec)');
+        inputContainer.forEach(input => input.style.color = 'var(--black-text)');
+        expenseTable.style.backgroundColor = 'var(--light-pri)';
+        expenseTable.style.border = '1px solid var(--light-tb-border)';
+        incomeTable.style.backgroundColor = 'var(--light-pri)';
+        incomeTable.style.border = '1px solid var(--light-tb-border)';
+        budgetTable.style.backgroundColor = 'var(--light-pri)';
+        budgetTable.style.border = '1px solid var(--light-tb-border)';
+        tableHeaders.forEach(input => input.style.backgroundColor = 'var(--light-sec)');
+        document.querySelector('.dropDownBtn').style.color = 'var(--black-text)';
+
+        changeBorders('var(--light-tb-border)', 'var(--light-tb-border)');
+        changeDuplicateDeleteColor('var(--black-text');
+        bottomTableContainer('var(--light-sec)');
+        changeDropDownColors('var(--light-pri)', 'var(--black-text)');
+    }
+}
+
+const changeBorders = function(btnOutline, rowColor) {
+    document.documentElement.style.setProperty('--btn-outline', btnOutline);
+    document.documentElement.style.setProperty('--rows', rowColor);
+};
+
+const changeDuplicateDeleteColor = function(color) {
+    document.documentElement.style.setProperty('--delete-dup', color);
+};
+
+const bottomTableContainer = function(color) {
+    document.documentElement.style.setProperty('--table-bottom', color);
+};
+
+const changeDropDownColors = function(background, text) {
+    document.documentElement.style.setProperty('--dd-bg', background);
+    document.documentElement.style.setProperty('--dd-text', text);
+};
+
+const loadToggleState = function() {
+    const darkModeState = localStorage.getItem('darkMode');
+    if (darkModeState === 'enabled') {
+        modeToggle.checked = true;
+        modeToggleFunction.call(modeToggle);
+    } else {
+        modeToggle.checked = false;
+        modeToggleFunction.call(modeToggle);
+    }
+};
+
+
+
 // ----------------------------------------------------------------------------------------------------------
 
 const hideBalanceDD = function(){
@@ -753,6 +855,7 @@ black.addEventListener('click', blackTheme);
 pink.addEventListener('click', pinkTheme);
 blue.addEventListener('click', blueTheme);
 red.addEventListener('click', redTheme);
+modeToggle.addEventListener('change', modeToggleFunction);
 
 // RENDER ON PAGE LOAD
 window.addEventListener('load', () => {
@@ -763,6 +866,7 @@ window.addEventListener('load', () => {
     updateBalance();
     loadCategories();
     renderBudgetTable();
+    loadToggleState(); 
 });
 
 
