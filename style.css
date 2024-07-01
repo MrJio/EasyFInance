@@ -1,0 +1,418 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap');
+
+* {
+    font-family: "Playwrite GB S", cursive, Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-weight: 400;
+}
+
+:root{
+    --black-bg: linear-gradient(45deg, #060606, #434242);
+    --black-pri: #060606;
+    --black-sec: #272829;
+    --black-text: #000;
+
+    --pink-bg: linear-gradient(45deg, #ff9ec6, #ff0090);
+    --pink-pri: #ff9ec6;
+    --pink-sec: #FF0080;
+    
+    --blue-bg: linear-gradient(45deg, #68D2E8, #03AED2);
+    --blue-pri: #68D2E8;
+    --blue-sec: #03AED2;
+    
+    --red-bg: linear-gradient(45deg, #E72929, #FF204E);
+    --red-pri: #E72929;
+    --red-sec: #FF204E;
+
+    --dark-pri: #151515;
+    --dark-sec: #45474B;
+
+    --white-bg: linear-gradient(45deg, #FFFFFF, #FFF7F1);
+    --light-pri: #f9f9f9;
+    --light-sec: #f2f2f2;
+    --light-border: #ccc;
+    --light-tb-border: #ddd;
+    --light-text: #F1E4C3;
+    --white-text: white;
+
+    --button-bg: var(--black-sec);
+    --button-hover-bg: var(--black-pri);
+    --btn-outline: var(--light-border);
+
+    --current-bg: var(--black-bg);
+
+    --light-nav-text: white;
+    --rows: var(--light-tb-border);
+
+    --delete-dup: var(--black-sec);
+    --table-bottom: var(--light-sec);
+    --dd-bg: var(--light-pri);
+    --dd-text: var(--dark-pri);
+}
+
+body {
+    background: var(--current-bg);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s ease infinite;
+    margin: 20px;
+    height: 100vh;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-text{
+    color: var(--light-nav-text);
+}
+
+.nav-text:hover{
+    color: var(--light-border);
+}
+
+.balance-container, .savings-container {
+    display: inline-block;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    background-color: var(--light-pri);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+    overflow: visible;
+}
+
+.new-category, .new-balance, .delete-category {
+    font-size: 13px;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    overflow: visible;
+}
+
+.balance-title, .savings-title {
+    font-size: 25px;
+}
+
+.balance-amount, .savings-amount {
+    text-align: left;
+    border-radius: 8px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+.balance-amount.load-up, .savings-amount.load-up {
+    transform: translateY(-10px);
+    color: green;
+}
+
+.balance-amount.load-down, .savings-amount.load-down {
+    transform: translateY(10px);
+    color: red;
+}
+
+.header {
+    color: var(--white-text);;
+    font-size: 4rem;
+    position: relative;
+    right: 80px;
+}
+
+.finance-tracker-divs {
+    background-color: var(--light-pri);
+    font-size: 12px;
+    margin: auto 10px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid var(--btn-outline);
+    border-radius: 15px;
+    outline: none;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+    color: #999;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--button-bg);
+    color: var(--white-text);;
+    border: none;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.expense-table, .income-table, .budget-table {
+    border: 1px solid var(--rows);
+    border-radius: 8px;
+    overflow: visible;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: visible;
+}
+
+thead th {
+    background-color: var(--table-bottom);
+    padding: 10px;
+    text-align: center;
+}
+
+tbody td {
+    padding: 10px;
+    border-top: 1px solid var(--rows);
+    text-align: center;
+}
+
+.delete-btn, .dup-btn, .delete-budget-btn {
+    color: var(--delete-dup);
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    color: grey;
+}
+
+.delete-budget-btn:hover{
+    color: grey;
+}
+
+.dup-btn:hover {
+    color: grey;
+}
+
+.total-amount {
+    padding: 10px;
+    text-align: right;
+    background-color: var(--table-bottom);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropDownBtn{
+    background-color: transparent;
+    color: var(--black-sec);
+    border: 0.5px solid var(--rows);
+}
+
+.dropdown-content{
+    position: absolute;
+    background-color: var(--dd-bg);
+    min-width: 100px;
+    min-height: 40px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+    margin-top: 2px;
+}
+
+.dropdown-content a {
+    text-align: center;
+    color: var(--dd-text);
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    margin: 5px auto;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--table-bottom);
+    width: 90%;
+    border-radius: 15px;
+    margin: 5px auto;
+}
+
+.dropdown-themes, .delete-category{
+    flex-direction: column;
+    position: absolute;
+    overflow: visible;
+    z-index: 10000;
+    min-width: 100px;
+    background-color: var(--dd-bg);
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 1px 1px;
+}
+
+.delete-category{
+    top: auto;
+    left: auto;
+    margin: auto 35px;
+    transform: translateX(0);
+}
+
+.theme-choices{
+    position: relative;
+    font-size: 13px;
+    display: block;
+    margin: 5px auto;
+    color: var(--dd-text);
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.delete-options{
+    position: relative;
+}
+
+.theme-choices:hover{
+    border-radius: 15px;
+    width: 90%;
+}
+
+.budget-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.budgetBtn{
+    background-color: transparent;
+    border: 1px solid var(--btn-outline);
+    color: #999;
+}
+
+.budgetBtn:hover{
+    color: #fff;
+}
+
+.budget-content {
+    position: absolute;
+    background-color: var(--dd-bg);
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 15px;
+    margin-top: 2px;
+}
+
+.budget-content a {
+    text-align: center;
+    color: var(--dd-text);
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    margin: 5px auto;
+}
+
+.budget-content a:hover {
+    background-color: var(--table-bottom);
+    width: 90%;
+    border-radius: 15px;
+    margin: 5px auto;
+}
+/* ^ THIS IS THE LAST THING THAT NEEDS TO BE CHANGED WHEN TOGGLING BETWEEN LIGHT AND DARK */
+
+.light:hover{
+    background-color: var(--light-text);
+}
+
+.black:hover{
+    background-color: var(--black-sec);
+}
+
+.pink:hover{
+    background-color: var(--pink-sec);
+}
+
+.blue:hover{
+    background-color: var(--blue-sec);
+}
+
+.red:hover{
+    background-color: var(--red-sec);
+}
+
+.mode-toggle {
+    width: 40px;
+    height: 20px;
+    position: relative;
+    appearance: none;
+    background: #e0e0e0;
+    margin-top: 3px;
+    right: 15px;
+    outline: none;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background 0.3s;
+}
+
+.mode-toggle::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px; 
+    top: 2px; 
+    left: 2px; 
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.5s;
+}
+
+.mode-toggle:checked::before {
+    transform: translateX(20px);
+}
+
+.mode-toggle::before {
+    background-color: #f5f5f5;
+}
+
+.mode-toggle:checked {
+    background-color: #45474B;
+}
+
+.mode-toggle:checked::before {
+    background-color: #ffffff; 
+}
+
+@media screen and (max-width: 1100px) {
+    .header {
+        font-size: 3.25rem;
+    }
+}
+
+.center {
+    text-align: center;
+}
+.hidden {
+    display: none;
+}
