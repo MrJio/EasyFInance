@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap');
 
-* {
-    font-family: "Playwrite GB S", cursive, Arial, Helvetica, sans-serif;
-    font-style: italic;
-    font-weight: 400;
-}
+/* 
+FONTS:
+- normal: ' "Noto Sans", Arial, Helvetica, sans-serif; ' (make font style normal , font weight 400)
+- cursive: ' "Playwrite GB S", Arial, Helvetica, sans-serif; ' cursive (make font style italic, font weight 400)
+- gamer: ' "Jaro", Arial, Helvetica, sans-serif; ' (make font style normal, font weight 400)
+- bubble: ' "Sniglet", system-ui, Arial, Helvetica, sans-serif; ' (make font style italic, font weight 800)
 
+*/
 :root{
     --black-bg: linear-gradient(45deg, #060606, #434242);
     --black-pri: #060606;
@@ -48,14 +49,6 @@
     --table-bottom: var(--light-sec);
     --dd-bg: var(--light-pri);
     --dd-text: var(--dark-pri);
-}
-
-body {
-    background: var(--current-bg);
-    background-size: 400% 400%;
-    animation: gradientAnimation 20s ease infinite;
-    margin: 20px;
-    height: 100vh;
 }
 
 @keyframes gradientAnimation {
@@ -269,6 +262,7 @@ tbody td {
 }
 
 .dropdown-themes, 
+.dropdown-fonts,
 .delete-category{
     flex-direction: column;
     position: absolute;
@@ -284,11 +278,18 @@ tbody td {
 .delete-category{
     top: auto;
     left: auto;
-    margin: auto 35px;
+    margin: auto 25px;
     transform: translateX(0);
 }
 
-.theme-choices{
+.font-title{
+    margin-left: 10px;
+}
+.font-choices:hover{
+    background-color: var(--rows);
+}
+.theme-choices,
+.font-choices{
     position: relative;
     font-size: 13px;
     display: block;
@@ -303,7 +304,8 @@ tbody td {
     position: relative;
 }
 
-.theme-choices:hover{
+.theme-choices:hover,
+.font-choices:hover{
     border-radius: 15px;
     width: 90%;
 }

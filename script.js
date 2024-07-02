@@ -1,3 +1,4 @@
+const entireDocument = document.querySelector('*');
 const expenseForm = document.getElementById("expense-form"); 
 const expenseList = document.getElementById("expense-list"); 
 const totalAmountElement = document.getElementById("total-amount"); 
@@ -24,6 +25,9 @@ const addCategoryBtn = document.querySelector('.add-catBtn');
 
 const themes = document.querySelector('.themes');
 const dropDownThemes = document.querySelector('.dropdown-themes');
+const fonts = document.querySelector('.nav-link.fonts');
+const dropDownFonts = document.querySelector('.dropdown-fonts');
+const fontChoices = document.querySelectorAll('.font-choices');
 
 const currentBalanceElement = document.querySelector('.balance-amount');
 
@@ -316,7 +320,6 @@ const renderBills = function() {
 // ----------------------------------------------------------------------------------------------------------
 
 // ADD FUNCTIONS
-
 const addExpense = function(event) {
     event.preventDefault();
 
@@ -445,7 +448,6 @@ const deleteSavings = function(event) {
 // ----------------------------------------------------------------------------------------------------------
 
 // DELETE BUTTON
-
 const deleteExpense = function(event) {
     if (event.target.classList.contains("delete-btn")) {
         const expenseIndex = parseInt(event.target.parentElement.getAttribute("data-id")); 
@@ -492,7 +494,6 @@ const deleteBill = function(event) {
 // ----------------------------------------------------------------------------------------------------------
 
 // DUPLICATE BUTTON
-
 const duplicateExpense = function(event) {
     if (event.target.classList.contains("dup-btn")) {
         const expenseIndex = parseInt(event.target.parentElement.getAttribute("data-id"));
@@ -542,7 +543,6 @@ const duplicateBill = function(event) {
 // ----------------------------------------------------------------------------------------------------------
 
 // CATEGORY SECTION THINGS
-
 const updateBalanceValue = function(){
     const newBalance = parseFloat(balanceVal.value);
     if (!isNaN(newBalance)) {
@@ -686,7 +686,6 @@ const updateSavingsTotal = function() {
 // ----------------------------------------------------------------------------------------------------------
 
 // BUDGET FORM CHECKS & LISTENER
-
 budgetForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -993,6 +992,71 @@ const loadToggleState = function() {
 
 // ----------------------------------------------------------------------------------------------------------
 
+// FONTS
+document.querySelectorAll('.font-choices').forEach(item => {
+    item.addEventListener('click', event => {
+        const fontClass = event.target.classList[1];
+        changeFont(fontClass);
+    });
+});
+
+const changeFont = function(fontClass) {
+    let fontFamily, fontStyle, fontWeight;
+
+    switch (fontClass) {
+        case 'normal':
+            fontFamily = '"Noto Sans", Arial, Helvetica, sans-serif';
+            fontStyle = 'normal';
+            fontWeight = '400';
+            break;
+        case 'cursive':
+            fontFamily = '"Playwrite GB S", Arial, Helvetica, sans-serif';
+            fontStyle = 'italic';
+            fontWeight = '400';
+            break;
+        case 'gamer':
+            fontFamily = '"Jaro", Arial, Helvetica, sans-serif';
+            fontStyle = 'normal';
+            fontWeight = '400';
+            break;
+        case 'bubble':
+            fontFamily = '"Sniglet", system-ui, Arial, Helvetica, sans-serif';
+            fontStyle = 'italic';
+            fontWeight = '800';
+            break;
+        default:
+            fontFamily = '"Noto Sans", Arial, Helvetica, sans-serif';
+            fontStyle = 'normal';
+            fontWeight = '400';
+    }
+
+    document.body.style.fontFamily = fontFamily;
+    document.body.style.fontStyle = fontStyle;
+    document.body.style.fontWeight = fontWeight;
+
+    localStorage.setItem('selectedFontClass', fontClass);
+};
+
+
+document.querySelectorAll('.font-choices').forEach(item => {
+    item.addEventListener('click', event => {
+        const fontClass = event.target.classList[1];
+        changeFont(fontClass);
+        hideFontDD();
+    });
+});
+
+function loadSavedFont() {
+    const savedFontClass = localStorage.getItem('selectedFontClass');
+    if (savedFontClass) {
+        changeFont(savedFontClass);
+    }
+}
+
+
+// ----------------------------------------------------------------------------------------------------------
+
+// DISPLAY AND HIDE FUNCTIONS
 const hideBalanceDD = function(){
     adjustBalance.classList.add('hidden');
 };
@@ -1011,6 +1075,9 @@ const showBalanceDD = function(){
     }
     if(!budgetDropdownContent.classList.contains('hidden')){
         hideBudgetDD();
+    }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
     }
 };
 
@@ -1031,6 +1098,9 @@ const showCategoryDD = function(){
     }
     if(!budgetDropdownContent.classList.contains('hidden')){
         hideBudgetDD();
+    }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
     }
 };
 
@@ -1053,6 +1123,9 @@ const showDeleteCategoryDD = function(e){
     if(!budgetDropdownContent.classList.contains('hidden')){
         hideBudgetDD();
     }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
+    }
 };
 
 const showBudgetDD = function(){
@@ -1068,6 +1141,9 @@ const showBudgetDD = function(){
     }
     if(!dropDownThemes.classList.contains('hidden')){
         hideThemeDD();
+    }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
     }
 };
 
@@ -1093,8 +1169,17 @@ const showThemeDD = function(){
     if(!budgetDropdownContent.classList.contains('hidden')){
         showBudgetDD();
     }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
+    }
 };
-const hideAll_DD = function(){
+
+const hideFontDD = function(){
+    dropDownFonts.classList.add('hidden');
+};
+
+const showFontDD = function(){
+    dropDownFonts.classList.toggle('hidden');
     if(!adjustBalance.classList.contains('hidden')){
         hideBalanceDD();
     }
@@ -1112,10 +1197,30 @@ const hideAll_DD = function(){
     }
 };
 
+const hideAll_DD = function(){
+    if(!adjustBalance.classList.contains('hidden')){
+        hideBalanceDD();
+    }
+    if(!addCategory.classList.contains('hidden')){
+        hideCategoryDD();
+    }
+    if(!deleteCategoryDropdown.classList.contains('hidden')){
+        hideDeleteCategoryDD();
+    }
+    if(!dropDownThemes.classList.contains('hidden')){
+        hideThemeDD();
+    }
+    if(!budgetDropdownContent.classList.contains('hidden')){
+        hideBudgetDD();
+    }
+    if(!dropDownFonts.classList.contains('hidden')){
+        hideFontDD();
+    }
+};
+
 // ----------------------------------------------------------------------------------------------------------
 
 // EVENT LISTENERS
-
 expenseForm.addEventListener("submit", addExpense); 
 expenseList.addEventListener("click", (event) => {
     if (event.target.classList.contains("delete-btn")) {
@@ -1138,6 +1243,7 @@ adjBalanceNav.addEventListener('click', showBalanceDD);
 addCategoryNav.addEventListener('click', showCategoryDD);
 removeCategoryNav.addEventListener('click', showDeleteCategoryDD);
 themes.addEventListener('click', showThemeDD);
+fonts.addEventListener('click',showFontDD);
 budgetBtn.addEventListener('click', showBudgetDD);
 
 xBtnBalance.addEventListener('click', hideBalanceDD);
@@ -1269,6 +1375,7 @@ window.addEventListener('load', () => {
         window.location.reload();
     }
     loadSavedTheme();
+    loadSavedFont();
     loadSavedBalance();
     renderExpenses(); 
     renderIncomes();
@@ -1281,7 +1388,6 @@ window.addEventListener('load', () => {
     renderSavings();
     renderBills();
 });
-
 
 
 // STORAGE USAGE
