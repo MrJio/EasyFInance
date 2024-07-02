@@ -76,7 +76,8 @@ body {
     color: var(--light-border);
 }
 
-.balance-container, .savings-container {
+.balance-container, 
+.savings-container {
     display: inline-block;
     padding: 30px;
     border-radius: 15px;
@@ -86,7 +87,9 @@ body {
     overflow: visible;
 }
 
-.new-category, .new-balance, .delete-category {
+.new-category, 
+.new-balance, 
+.delete-category {
     font-size: 13px;
     display: flex;
     margin: 0 auto;
@@ -94,23 +97,27 @@ body {
     overflow: visible;
 }
 
-.balance-title, .savings-title {
+.balance-title, 
+.savings-title {
     font-size: 25px;
 }
 
-.balance-amount, .savings-amount {
+.balance-amount, 
+.savings-amount {
     text-align: left;
     border-radius: 8px;
     padding: 0 10px;
     width: 100%;
 }
 
-.balance-amount.load-up, .savings-amount.load-up {
+.balance-amount.load-up, 
+.savings-amount.load-up {
     transform: translateY(-10px);
     color: green;
 }
 
-.balance-amount.load-down, .savings-amount.load-down {
+.balance-amount.load-down, 
+.savings-amount.load-down {
     transform: translateY(10px);
     color: red;
 }
@@ -119,7 +126,6 @@ body {
     color: var(--white-text);;
     font-size: 4rem;
     position: relative;
-    right: 80px;
 }
 
 .finance-tracker-divs {
@@ -145,12 +151,14 @@ form {
 }
 
 input[type="text"],
-input[type="number"] {
+input[type="number"],
+input[type="date"] {
     padding: 10px;
     border: 1px solid var(--btn-outline);
     border-radius: 15px;
     outline: none;
 }
+
 
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
@@ -168,7 +176,9 @@ button:hover {
     background-color: var(--button-hover-bg);
 }
 
-.expense-table, .income-table, .budget-table {
+.expense-table, 
+.income-table, 
+.budget-table {
     border: 1px solid var(--rows);
     border-radius: 8px;
     overflow: visible;
@@ -193,22 +203,23 @@ tbody td {
     text-align: center;
 }
 
-.delete-btn, .dup-btn, .delete-budget-btn {
+.delete-btn, 
+.dup-btn, 
+.delete-budget-btn, 
+.delete-savings-btn, 
+.paid-btn {
     color: var(--delete-dup);
     cursor: pointer;
 }
 
-.delete-btn:hover {
+.delete-btn:hover,
+.delete-budget-btn:hover,
+.dup-btn:hover,
+.paid-btn:hover,
+.delete-savings-btn:hover {
     color: grey;
 }
 
-.delete-budget-btn:hover{
-    color: grey;
-}
-
-.dup-btn:hover {
-    color: grey;
-}
 
 .total-amount {
     padding: 10px;
@@ -257,7 +268,8 @@ tbody td {
     margin: 5px auto;
 }
 
-.dropdown-themes, .delete-category{
+.dropdown-themes, 
+.delete-category{
     flex-direction: column;
     position: absolute;
     overflow: visible;
@@ -340,7 +352,6 @@ tbody td {
     border-radius: 15px;
     margin: 5px auto;
 }
-/* ^ THIS IS THE LAST THING THAT NEEDS TO BE CHANGED WHEN TOGGLING BETWEEN LIGHT AND DARK */
 
 .light:hover{
     background-color: var(--light-text);

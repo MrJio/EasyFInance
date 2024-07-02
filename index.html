@@ -69,6 +69,10 @@
             <div class="flex-fill align-self-center">
                 <h1 class="header">Simple Budget Tracker</h1>
             </div>
+            <div class="savings-container w-20" id="savingsContainer">
+                <h3 class="savings-title">Savings: </h3>
+                <p class="center">$<span class="savings-amount">0.00</span></p>
+            </div>
         </div>
 
         <div class="container">
@@ -86,6 +90,7 @@
                     <input type="number" 
                         id="budget-amount" 
                         step="0.01"
+                        max="100000"
                         placeholder="Amount"/> 
                     <button type="submit" class="rounded-4"> 
                         Add Budget 
@@ -118,6 +123,7 @@
                         <input type="number" 
                             id="expense-amount" 
                             step="0.01"
+                            max="10000000"
                             placeholder="Amount"/> 
                         <button type="submit" class="rounded-4"> 
                             Add Expense 
@@ -136,7 +142,7 @@
                             <tbody id="expense-list"></tbody> 
                         </table> 
                         <div class="total-amount"> 
-                            <strong>Total:</strong>  
+                            <strong>Total Spent:</strong>  
                             $<span id="total-amount">0</span> 
                         </div> 
                     </div> 
@@ -152,6 +158,7 @@
                         <input type="number" 
                             id="income-amount" 
                             step="0.01"
+                            max="10000000"
                             placeholder="Amount" required /> 
                         <button type="submit" class="rounded-4"> 
                             Add Paycheck 
@@ -169,8 +176,84 @@
                             <tbody id="income-list"></tbody> 
                         </table> 
                         <div class="total-amount"> 
-                            <strong>Total:</strong>  
+                            <strong>Total Made:</strong>  
                             $<span id="total-amount-2">0</span> 
+                        </div> 
+                    </div> 
+                </div> 
+
+            </div>
+            <div class="row">
+                <!-- Bills -->
+                <div class="col col-xs-12 finance-tracker-divs my-3" id="billContainer"> 
+                    <h1 class="mb-3">Bills</h1> 
+                    <form id="bill-form">
+                        <input type="date" 
+                            id="bill-date" 
+                            style="width:115px;"/> 
+                        <input type="text" 
+                            id="bill-name" 
+                            placeholder="Bill Name"/> 
+                        <input type="number" 
+                            id="bill-amount" 
+                            step="0.01"
+                            max="100000"
+                            placeholder="Amount"/> 
+                        <button type="submit" class="rounded-4"> 
+                            Add Bill 
+                        </button> 
+                    </form> 
+                    <div class="bill-table"> 
+                        <table> 
+                            <thead> 
+                                <tr>
+                                    <th>Date</th> 
+                                    <th>Bill Name</th>
+                                    <th>Amount Due</th> 
+                                    <th>Action</th> 
+                                </tr> 
+                            </thead> 
+                            <tbody id="bill-list"></tbody> 
+                        </table> 
+                        <div class="total-amount"> 
+                            <strong>Total Due:</strong>  
+                            $<span id="total-amount-3">0</span> 
+                        </div> 
+                    </div> 
+                </div> 
+
+                 <!-- Savings -->
+                 <div class="col col-xs-12 finance-tracker-divs my-3" id="savingsContainer2"> 
+                    <h1 class="mb-3">Savings</h1> 
+                    <form id="savings-form">
+                        <input type="text" 
+                            id="savings-name" 
+                            placeholder="Saving Title"/> 
+                            <input type="number" 
+                            id="savings-amount" 
+                            step="0.01"
+                            max="100000"
+                            placeholder="Goal"/> 
+                        <button type="submit" class="rounded-4"> 
+                            Add to Savings 
+                        </button> 
+                    </form> 
+                    <div class="savings-table"> 
+                        <table> 
+                            <thead> 
+                                <tr>
+                                    <th>Saving Title</th> 
+                                    <th>Category</th>
+                                    <th>Savings Gaol</th>
+                                    <th>Amount Saved</th> 
+                                    <th>Action</th> 
+                                </tr> 
+                            </thead> 
+                            <tbody id="savings-list"></tbody> 
+                        </table> 
+                        <div class="total-amount"> 
+                            <strong>Total Saved:</strong>  
+                            $<span id="total-amount-4">0</span> 
                         </div> 
                     </div> 
                 </div> 

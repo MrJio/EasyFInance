@@ -31,14 +31,25 @@ const budgetForm = document.getElementById("budget-form");
 const budgetBtn = document.querySelector(".budgetBtn");
 const budgetDropdownContent = document.querySelector(".budget-content");
 
+const savingsForm = document.getElementById("savings-form");
+const savingsList = document.getElementById("savings-list");
+const totalAmountElement4 = document.getElementById("total-amount-4");
+const savingsBtn = document.querySelector(".budgetBtn");
+const savingsDropdownContent = document.querySelector(".budget-content");
+const billForm = document.getElementById("bill-form");
+const billList = document.getElementById("bill-list");
+const totalAmountElement3 = document.getElementById("total-amount-3");
+
 // ----------------------------------------------------------------------------------------------------------
 
-
+const currentVersion = '1.0.0';
 let expenses = JSON.parse(localStorage.getItem("expenses")) || []; 
 let incomes = JSON.parse(localStorage.getItem("incomes")) || []; 
 let currentBalance = parseFloat(localStorage.getItem("currentBalance")) || 0.00;
 let categories = JSON.parse(localStorage.getItem("categories")) || ['Rent', 'Food', 'Transportation', 'Entertainment', 'Personal Care', 'Insurance', 'Car Payment', 'Dining Out', 'Gas', 'Utilities', 'Mortgage', 'Water', 'Internet', 'Phone bill'];
 let budgets = JSON.parse(localStorage.getItem("budgets")) || [];
+let savings = JSON.parse(localStorage.getItem("savings")) || [];
+let bills = JSON.parse(localStorage.getItem("bills")) || [];
 let currentOpenDropdown = null;
 
 
@@ -54,6 +65,14 @@ const calculateExpensesByCategory = function(category) {
     return expenses
         .filter(expense => expense.category === category)
         .reduce((total, expense) => total + expense.amount, 0);
+};
+
+const calculateTotalSavings = function() {
+    return savings.reduce((total, saving) => total + saving.amountSaved, 0);
+};
+
+const calculateTotalBills = function() {
+    return bills.reduce((total, bill) => total + bill.amount, 0);
 };
 
 const updateBalance = function() {
@@ -81,6 +100,33 @@ const updateBalance = function() {
 // ----------------------------------------------------------------------------------------------------------
 
 // RENDER FUNCTIONS
+const renderBudgetTable = function() {
+    const budgetList = document.getElementById("budget-list");
+    budgetList.innerHTML = "";
+
+    budgets.forEach((budget, index) => {
+        const expensesForCategory = calculateExpensesByCategory(budget.category);
+        const amountLeft = budget.limit - expensesForCategory;
+
+        const budgetRow = document.createElement("tr");
+        budgetRow.innerHTML = `
+            <td>${budget.category}</td>
+            <td>$${budget.limit.toFixed(2)}</td>
+            <td>$${amountLeft.toFixed(2)}</td>
+            <td><span class="delete-budget-btn" data-index="${index}">Delete</span></td>
+        `;
+        budgetList.appendChild(budgetRow);
+    });
+
+    document.querySelectorAll(".delete-budget-btn").forEach(button => {
+        button.addEventListener("click", (event) => {
+            const index = parseInt(event.target.getAttribute("data-index"));
+            budgets.splice(index, 1);
+            localStorage.setItem("budgets", JSON.stringify(budgets));
+            renderBudgetTable();
+        });
+    });
+};
 
 const renderExpenses = function() {
     expenseList.innerHTML = "";
@@ -177,32 +223,94 @@ const renderIncomes = function() {
     updateBalance();
 }; 
 
-const renderBudgetTable = function() {
-    const budgetList = document.getElementById("budget-list");
-    budgetList.innerHTML = "";
+const renderSavings = function() {
+    savingsList.innerHTML = "";
 
-    budgets.forEach((budget, index) => {
-        const expensesForCategory = calculateExpensesByCategory(budget.category);
-        const amountLeft = budget.limit - expensesForCategory;
+    savings.forEach((saving, index) => {
+        const savingsRow = document.createElement("tr");
 
-        const budgetRow = document.createElement("tr");
-        budgetRow.innerHTML = `
-            <td>${budget.category}</td>
-            <td>$${budget.limit.toFixed(2)}</td>
-            <td>$${amountLeft.toFixed(2)}</td>
-            <td><span class="delete-budget-btn" data-index="${index}">Delete</span></td>
+        let dropdownOptions = `
+            <div class="dropdown">
+                <button class="dropDownBtn rounded-3">Categories</button>
+                <div class="dropdown-content rounded-3 hidden">
         `;
-        budgetList.appendChild(budgetRow);
+
+        categories.forEach(category => {
+            dropdownOptions += `<a href="#">${category}</a>`;
+        });
+
+        dropdownOptions += `
+                </div>
+            </div>
+        `;
+
+        savingsRow.innerHTML = `
+            <td>${saving.name}</td>
+            <td class="category-cell">${saving.category ? saving.category : dropdownOptions}</td>
+            <td>$${saving.goal.toFixed(2)}</td>
+            <td>
+                <span class="amount-saved-span" data-index="${index}">$${saving.amountSaved.toFixed(2)}</span>
+                <input type="number" class="amount-saved-input hidden" data-index="${index}" value="${saving.amountSaved.toFixed(2)}" step="0.01" min="0" max="1000000">
+            </td>
+            <td data-id="${index}"><span class="delete-savings-btn">Delete</span></td>
+        `;
+
+        savingsList.appendChild(savingsRow);
+
+        if (!saving.category) {
+            const dropDownBtn = savingsRow.querySelector('.dropDownBtn');
+            const dropdownContent = savingsRow.querySelector('.dropdown-content');
+            dropDownBtn.addEventListener('click', () => {
+                hideAll_DD();
+
+                if (currentOpenDropdown && currentOpenDropdown !== dropdownContent) {
+                    currentOpenDropdown.classList.add('hidden');
+                }
+
+                dropdownContent.classList.toggle('hidden');
+
+                currentOpenDropdown = dropdownContent.classList.contains('hidden') ? null : dropdownContent;
+            });
+
+            dropdownContent.querySelectorAll('a').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selectedCategory = e.target.textContent;
+                    saving.category = selectedCategory;
+                    localStorage.setItem("savings", JSON.stringify(savings));
+                    renderSavings();
+                });
+            });
+        }
     });
 
-    document.querySelectorAll(".delete-budget-btn").forEach(button => {
-        button.addEventListener("click", (event) => {
-            const index = parseInt(event.target.getAttribute("data-index"));
-            budgets.splice(index, 1);
-            localStorage.setItem("budgets", JSON.stringify(budgets));
-            renderBudgetTable();
-        });
+    totalAmountElement4.textContent = calculateTotalSavings().toFixed(2);
+    updateSavingsTotal();
+    localStorage.setItem("savings", JSON.stringify(savings));
+    hideAll_DD();
+};
+
+const renderBills = function() {
+    billList.innerHTML = "";
+
+    bills.forEach((bill, index) => {
+        const billRow = document.createElement("tr");
+
+        billRow.innerHTML = `
+            <td>
+                <span class="bill-date-span" data-index="${index}">${bill.date}</span>
+                <input type="date" class="bill-date-input hidden" data-index="${index}" value="${bill.date}">
+            </td>
+            <td>${bill.name}</td>
+            <td>$${bill.amount.toFixed(2)}</td>
+            <td data-id="${index}"><span class="paid-btn">Paid</span> / <span class="dup-btn">Duplicate</span></td>
+        `;
+
+        billList.appendChild(billRow);
     });
+
+    totalAmountElement3.textContent = calculateTotalBills().toFixed(2);
+    localStorage.setItem("bills", JSON.stringify(bills));
 };
 
 // ----------------------------------------------------------------------------------------------------------
@@ -262,6 +370,78 @@ const addIncome = function(event) {
     renderIncomes(); 
 };
 
+const addSavings = function(event) {
+    event.preventDefault();
+
+    const savingsNameInput = document.getElementById("savings-name");
+    const savingsAmountInput = document.getElementById("savings-amount");
+
+    const savingsName = savingsNameInput.value.trim();
+    const savingsGoal = parseFloat(savingsAmountInput.value);
+
+    if (savingsName === "" || isNaN(savingsGoal)) {
+        alert("Please enter valid savings details.");
+        return;
+    }
+
+    if (savings.some(saving => saving.name === savingsName)) {
+        alert("This saving title already exists.");
+        return;
+    }
+
+    const saving = {
+        name: savingsName,
+        goal: savingsGoal,
+        amountSaved: 0,
+        category: null,
+    };
+
+    savings.push(saving);
+    renderSavings();
+
+    savingsNameInput.value = "";
+    savingsAmountInput.value = "";
+};
+
+const addBill = function(event) {
+    event.preventDefault();
+
+    const billDateInput = document.getElementById("bill-date");
+    const billNameInput = document.getElementById("bill-name");
+    const billAmountInput = document.getElementById("bill-amount");
+
+    const billDate = billDateInput.value;
+    const billName = billNameInput.value.trim();
+    const billAmount = parseFloat(billAmountInput.value);
+
+    if (billDate === "" || billName === "" || isNaN(billAmount)) {
+        alert("Please enter valid bill details.");
+        return;
+    }
+
+    const bill = {
+        date: billDate,
+        name: billName,
+        amount: billAmount,
+    };
+
+    bills.push(bill);
+    renderBills();
+
+    billDateInput.value = "";
+    billNameInput.value = "";
+    billAmountInput.value = "";
+};
+
+const deleteSavings = function(event) {
+    if (event.target.classList.contains("delete-savings-btn")) {
+        const savingsIndex = parseInt(event.target.parentElement.getAttribute("data-id"));
+        savings.splice(savingsIndex, 1);
+
+        renderSavings();
+    }
+};
+
 // ----------------------------------------------------------------------------------------------------------
 
 // DELETE BUTTON
@@ -299,6 +479,15 @@ const deleteBudget = function(event) {
 };
 document.getElementById("budget-list").addEventListener("click", deleteBudget);
 
+const deleteBill = function(event) {
+    if (event.target.classList.contains("paid-btn")) {
+        const billIndex = parseInt(event.target.parentElement.getAttribute("data-id"));
+        bills.splice(billIndex, 1);
+
+        renderBills();
+    }
+};
+
 
 // ----------------------------------------------------------------------------------------------------------
 
@@ -335,6 +524,21 @@ const duplicateIncome = function(event) {
     }
 };
 
+const duplicateBill = function(event) {
+    if (event.target.classList.contains("dup-btn")) {
+        const billIndex = parseInt(event.target.parentElement.getAttribute("data-id"));
+        const billToDuplicate = bills[billIndex];
+        const duplicatedBill = {
+            date: billToDuplicate.date,
+            name: billToDuplicate.name,
+            amount: billToDuplicate.amount
+        };
+        bills.push(duplicatedBill);
+        localStorage.setItem("bills", JSON.stringify(bills));
+        renderBills();
+    }
+};
+
 // ----------------------------------------------------------------------------------------------------------
 
 // CATEGORY SECTION THINGS
@@ -351,7 +555,34 @@ const updateBalanceValue = function(){
     hideBalanceDD();
 };
 
+const updateSavedAmount = function(event) {
+    if (event.target.classList.contains("amount-saved-input")) {
+        const savingsIndex = parseInt(event.target.getAttribute("data-index"));
+        const newAmountSaved = parseFloat(event.target.value);
 
+        if (!isNaN(newAmountSaved)) {
+            savings[savingsIndex].amountSaved = newAmountSaved;
+            renderSavings();
+        } else {
+            alert("Please enter a valid number for the saved amount.");
+        }
+    }
+};
+
+const updateBillDate = function(event) {
+    if (event.target.classList.contains("bill-date-input") && event.key === "Enter") {
+        const index = event.target.getAttribute("data-index");
+        const newDate = event.target.value;
+        const spanField = document.querySelector(`.bill-date-span[data-index="${index}"]`);
+
+        bills[index].date = newDate;
+        spanField.textContent = newDate;
+        localStorage.setItem("bills", JSON.stringify(bills));
+
+        spanField.classList.remove('hidden');
+        event.target.classList.add('hidden');
+    }
+};
 
 const addCategoryToDropDown = function() {
     const dropdownContents = document.querySelectorAll(".dropdown-content");
@@ -416,6 +647,41 @@ const loadSavedBalance = function() {
         currentBalanceElement.textContent = currentBalance.toFixed(2);
     }
 }
+
+const addCategoryToSavingsDropDown = function() {
+    savingsDropdownContent.innerHTML = '';
+
+    categories.forEach(category => {
+        const optionLink = document.createElement("a");
+        optionLink.href = "#";
+        optionLink.textContent = category;
+        optionLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            savingsBtn.textContent = category;
+            savingsDropdownContent.classList.add('hidden');
+        });
+        savingsDropdownContent.appendChild(optionLink);
+    });
+};
+
+const updateSavingsTotal = function() {
+    const totalSavings = calculateTotalSavings();
+    const savingsAmountElement = document.querySelector('.savings-amount');
+
+    const oldSavings = parseFloat(savingsAmountElement.textContent.replace('$', ''));
+    const savingsDifference = totalSavings - oldSavings;
+
+    if (savingsDifference > 0) {
+        savingsAmountElement.classList.add('load-up');
+    } else if (savingsDifference < 0) {
+        savingsAmountElement.classList.add('load-down');
+    }
+
+    setTimeout(() => {
+        savingsAmountElement.textContent = totalSavings.toFixed(2);
+        savingsAmountElement.classList.remove('load-up', 'load-down');
+    }, 300);
+};
 
 // ----------------------------------------------------------------------------------------------------------
 
@@ -588,18 +854,22 @@ const budgetContainer = document.getElementById('budgetContainer');
 const incomeContainer = document.getElementById('incomeContainer');
 const expenseContainer = document.getElementById('expenseContainer');
 const balanceContainer = document.getElementById('balanceContainer');
-const inputContainer = document.querySelectorAll('input[type="text"], input[type="number"]');
+const savingsContainer = document.getElementById('savingsContainer');
+const savingsContainer2 = document.getElementById('savingsContainer2');
+const billContainer = document.getElementById('billContainer');
+const inputContainer = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]');
 const expenseTable = document.querySelector('.expense-table');
 const incomeTable = document.querySelector('.income-table');
 const budgetTable = document.querySelector('.budget-table');
+const billTable = document.querySelector('.bill-table');
+const savingsTable = document.querySelector('.savings-table');
 const tableHeaders = document.querySelectorAll('thead th');
 const rowDividers = document.querySelectorAll('tbody td');
 
 const modeToggleFunction = function() {
     // DARK MODE
     if (this.checked) {
-        localStorage.setItem('darkMode', 'enabled'); // Save state
-        
+        localStorage.setItem('darkMode', 'enabled');
         if (budgetContainer) budgetContainer.style.backgroundColor = 'var(--dark-pri)';
         if (budgetContainer) budgetContainer.style.color = 'var(--white-text)';
         if (incomeContainer) incomeContainer.style.backgroundColor = 'var(--dark-pri)';
@@ -608,11 +878,12 @@ const modeToggleFunction = function() {
         if (expenseContainer) expenseContainer.style.color = 'var(--white-text)';
         if (balanceContainer) balanceContainer.style.backgroundColor = 'var(--dark-pri)';
         if (balanceContainer) balanceContainer.style.color = 'var(--white-text)';
-        
-        inputContainer.forEach(input => {
-            if (input) input.style.backgroundColor = 'var(--black-sec)';
-            if (input) input.style.color = 'var(--white-text)';
-        });
+        if (savingsContainer2) savingsContainer2.style.backgroundColor = 'var(--dark-pri)';
+        if (savingsContainer2) savingsContainer2.style.color = 'var(--white-text)';
+        if (savingsContainer) savingsContainer.style.backgroundColor = 'var(--dark-pri)';
+        if (savingsContainer) savingsContainer.style.color = 'var(--white-text)';
+        if (billContainer) billContainer.style.backgroundColor = 'var(--dark-pri)';
+        if (billContainer) billContainer.style.color = 'var(--white-text)';
         
         if (expenseTable) expenseTable.style.backgroundColor = 'var(--dark-pri)';
         if (expenseTable) expenseTable.style.border = '1px solid var(--black-pri)';
@@ -620,11 +891,18 @@ const modeToggleFunction = function() {
         if (incomeTable) incomeTable.style.border = '1px solid var(--black-pri)';
         if (budgetTable) budgetTable.style.backgroundColor = 'var(--dark-pri)';
         if (budgetTable) budgetTable.style.border = '1px solid var(--black-pri)';
-        
+        if (savingsTable) savingsTable.style.backgroundColor = 'var(--dark-pri)';
+        if (savingsTable) savingsTable.style.border = '1px solid var(--black-pri)';
+        if (billTable) billTable.style.backgroundColor = 'var(--dark-pri)';
+        if (billTable) billTable.style.border = '1px solid var(--black-pri)';
+        inputContainer.forEach(input => {
+            if (input) input.style.backgroundColor = 'var(--black-sec)';
+            if (input) input.style.color = 'var(--white-text)';
+        });
         tableHeaders.forEach(input => {
             if (input) input.style.backgroundColor = 'var(--black-sec)';
         });
-        
+
         const dropDownBtn = document.querySelector('.dropDownBtn');
         if (dropDownBtn) dropDownBtn.style.color = 'var(--white-text)';
 
@@ -635,8 +913,7 @@ const modeToggleFunction = function() {
     } 
     // LIGHT MODE
     else {
-        localStorage.setItem('darkMode', 'disabled'); // Save state
-        
+        localStorage.setItem('darkMode', 'disabled');
         if (budgetContainer) budgetContainer.style.backgroundColor = 'var(--light-pri)';
         if (budgetContainer) budgetContainer.style.color = 'var(--black-text)';
         if (incomeContainer) incomeContainer.style.backgroundColor = 'var(--light-pri)';
@@ -645,11 +922,12 @@ const modeToggleFunction = function() {
         if (expenseContainer) expenseContainer.style.color = 'var(--black-text)';
         if (balanceContainer) balanceContainer.style.backgroundColor = 'var(--light-pri)';
         if (balanceContainer) balanceContainer.style.color = 'var(--black-text)';
-        
-        inputContainer.forEach(input => {
-            if (input) input.style.backgroundColor = 'var(--light-sec)';
-            if (input) input.style.color = 'var(--black-text)';
-        });
+        if (savingsContainer2) savingsContainer2.style.backgroundColor = 'var(--light-pri)';
+        if (savingsContainer2) savingsContainer2.style.color = 'var(--black-text)';
+        if (savingsContainer) savingsContainer.style.backgroundColor = 'var(--light-pri)';
+        if (savingsContainer) savingsContainer.style.color = 'var(--black-text)';
+        if (billContainer) billContainer.style.backgroundColor = 'var(--light-pri)';
+        if (billContainer) billContainer.style.color = 'var(--black-text)';
         
         if (expenseTable) expenseTable.style.backgroundColor = 'var(--light-pri)';
         if (expenseTable) expenseTable.style.border = '1px solid var(--light-tb-border)';
@@ -657,14 +935,21 @@ const modeToggleFunction = function() {
         if (incomeTable) incomeTable.style.border = '1px solid var(--light-tb-border)';
         if (budgetTable) budgetTable.style.backgroundColor = 'var(--light-pri)';
         if (budgetTable) budgetTable.style.border = '1px solid var(--light-tb-border)';
-        
+        if (savingsTable) savingsTable.style.backgroundColor = 'var(--light-pri)';
+        if (savingsTable) savingsTable.style.border = '1px solid var(--light-tb-border)';
+        if (billTable) billTable.style.backgroundColor = 'var(--light-pri)';
+        if (billTable) billTable.style.border = '1px solid var(--light-tb-border)';
+        inputContainer.forEach(input => {
+            if (input) input.style.backgroundColor = 'var(--light-sec)';
+            if (input) input.style.color = 'var(--black-text)';
+        });
         tableHeaders.forEach(input => {
             if (input) input.style.backgroundColor = 'var(--light-sec)';
         });
-        
+
         const dropDownBtn = document.querySelector('.dropDownBtn');
         if (dropDownBtn) dropDownBtn.style.color = 'var(--black-text)';
-
+        
         changeBorders('var(--light-tb-border)', 'var(--light-tb-border)');
         changeDuplicateDeleteColor('var(--black-text)');
         bottomTableContainer('var(--light-sec)');
@@ -875,8 +1160,110 @@ blue.addEventListener('click', blueTheme);
 red.addEventListener('click', redTheme);
 modeToggle.addEventListener('change', modeToggleFunction);
 
+savingsForm.addEventListener("submit", addSavings);
+savingsList.addEventListener("click", deleteSavings);
+savingsList.addEventListener("click", (event) => {
+    if (event.target.classList.contains("amount-saved-span")) {
+        const index = event.target.getAttribute("data-index");
+        const inputField = document.querySelector(`.amount-saved-input[data-index="${index}"]`);
+        const spanField = event.target;
+
+        spanField.classList.add('hidden');
+        inputField.classList.remove('hidden');
+        inputField.focus();
+    }
+});
+savingsList.addEventListener("keydown", (event) => {
+    if (event.target.classList.contains("amount-saved-input") && event.key === "Enter") {
+        const index = event.target.getAttribute("data-index");
+        const newAmountSaved = parseFloat(event.target.value);
+        const spanField = document.querySelector(`.amount-saved-span[data-index="${index}"]`);
+
+        if (!isNaN(newAmountSaved) && newAmountSaved <= 1000000) {
+            savings[index].amountSaved = newAmountSaved;
+            spanField.textContent = `$${newAmountSaved.toFixed(2)}`;
+            localStorage.setItem("savings", JSON.stringify(savings));
+            totalAmountElement4.textContent = calculateTotalSavings().toFixed(2);
+            updateSavingsTotal();
+        } else {
+            alert("Please enter a valid number for the saved amount (up to 1,000,000).");
+        }
+
+        spanField.classList.remove('hidden');
+        event.target.classList.add('hidden');
+    }
+});
+document.addEventListener("click", (event) => {
+    const inputFields = document.querySelectorAll('.amount-saved-input');
+    inputFields.forEach(inputField => {
+        if (!inputField.contains(event.target) && !inputField.classList.contains('hidden') && !event.target.classList.contains("amount-saved-span")) {
+            const index = inputField.getAttribute("data-index");
+            const newAmountSaved = parseFloat(inputField.value);
+            const spanField = document.querySelector(`.amount-saved-span[data-index="${index}"]`);
+
+            if (!isNaN(newAmountSaved) && newAmountSaved <= 1000000) {
+                savings[index].amountSaved = newAmountSaved;
+                spanField.textContent = `$${newAmountSaved.toFixed(2)}`;
+                localStorage.setItem("savings", JSON.stringify(savings));
+                totalAmountElement4.textContent = calculateTotalSavings().toFixed(2);
+                updateSavingsTotal();
+            } else {
+                alert("Please enter a valid number for the saved amount (up to 1,000,000).");
+            }
+
+            spanField.classList.remove('hidden');
+            inputField.classList.add('hidden');
+        }
+    });
+}, true);
+
+billList.addEventListener("click", (event) => {
+    if (event.target.classList.contains("bill-date-span")) {
+        const index = event.target.getAttribute("data-index");
+        const inputField = document.querySelector(`.bill-date-input[data-index="${index}"]`);
+        const spanField = event.target;
+
+        spanField.classList.add('hidden');
+        inputField.classList.remove('hidden');
+        inputField.focus();
+    }
+});
+billList.addEventListener("keydown", updateBillDate);
+document.addEventListener("click", (event) => {
+    const inputFields = document.querySelectorAll('.bill-date-input');
+    inputFields.forEach(inputField => {
+        if (!inputField.contains(event.target) && !inputField.classList.contains('hidden') && !event.target.classList.contains("bill-date-span")) {
+            const index = inputField.getAttribute("data-index");
+            const newDate = inputField.value;
+            const spanField = document.querySelector(`.bill-date-span[data-index="${index}"]`);
+
+            bills[index].date = newDate;
+            spanField.textContent = newDate;
+            localStorage.setItem("bills", JSON.stringify(bills));
+
+            spanField.classList.remove('hidden');
+            inputField.classList.add('hidden');
+        }
+    });
+}, true);
+billForm.addEventListener("submit", addBill);
+billList.addEventListener("click", deleteBill);
+billList.addEventListener("click", duplicateBill);
+
 // RENDER ON PAGE LOAD
 window.addEventListener('load', () => {
+    const storedVersion = localStorage.getItem('version');
+    if (storedVersion !== currentVersion) {
+        localStorage.clear();
+        localStorage.setItem('version', currentVersion);
+        const initialCategories = ['Rent', 'Food', 'Transportation', 'Entertainment', 'Personal Care', 'Insurance', 'Car Payment', 'Dining Out', 'Gas', 'Utilities', 'Mortgage', 'Water', 'Internet', 'Phone bill'];
+        localStorage.setItem('categories', JSON.stringify(initialCategories));
+        localStorage.setItem('expenses', JSON.stringify([]));
+        localStorage.setItem('incomes', JSON.stringify([]));
+        localStorage.setItem('budgets', JSON.stringify([]));
+        localStorage.setItem('currentBalance', '0.00');
+        window.location.reload();
+    }
     loadSavedTheme();
     loadSavedBalance();
     renderExpenses(); 
@@ -884,8 +1271,13 @@ window.addEventListener('load', () => {
     updateBalance();
     loadCategories();
     renderBudgetTable();
-    loadToggleState(); 
+    addCategoryToDropDown();
+    loadToggleState();
+    addCategoryToSavingsDropDown();
+    renderSavings();
+    renderBills();
 });
+
 
 
 // STORAGE USAGE
