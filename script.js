@@ -903,8 +903,10 @@ const modeToggleFunction = function() {
             if (input) input.style.backgroundColor = 'var(--black-sec)';
         });
 
-        const dropDownBtn = document.querySelector('.dropDownBtn');
-        if (dropDownBtn) dropDownBtn.style.color = 'var(--white-text)';
+        const dropDownBtn = document.querySelectorAll('.dropDownBtn');
+        dropDownBtn.forEach(input => {
+            if (input) input.style.color = 'var(--white-text)';
+        });
 
         changeBorders('var(--black-pri)', 'var(--black-sec)');
         changeDuplicateDeleteColor('var(--white-text)');
@@ -947,8 +949,10 @@ const modeToggleFunction = function() {
             if (input) input.style.backgroundColor = 'var(--light-sec)';
         });
 
-        const dropDownBtn = document.querySelector('.dropDownBtn');
-        if (dropDownBtn) dropDownBtn.style.color = 'var(--black-text)';
+        const dropDownBtn = document.querySelectorAll('.dropDownBtn');
+        dropDownBtn.forEach(input => {
+            if (input) input.style.color = 'var(--black-text)';
+        });
         
         changeBorders('var(--light-tb-border)', 'var(--light-tb-border)');
         changeDuplicateDeleteColor('var(--black-text)');
