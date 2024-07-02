@@ -76,43 +76,41 @@
         </div>
 
         <div class="container">
-
-            <!-- Budget Container -->
-            <div class="col-xs-12 col-lg-7 finance-tracker-divs my-3 mt-5" style="margin: 0 auto;" id="budgetContainer">
-                <h1 class="mb-3">Budget Plan</h1>
-                <form id="budget-form">
-                    <div class="dropdown">
-                        <button type="button" class="budgetBtn rounded-4">Categories</button>
-                        <div class="dropdown-content budget-content hidden">
-                        <!-- Menu Items will be dynamically added here -->
-                        </div>
-                    </div>
-                    <input type="number" 
-                        id="budget-amount" 
-                        step="0.01"
-                        max="100000"
-                        placeholder="Amount"/> 
-                    <button type="submit" class="rounded-4"> 
-                        Add Budget 
-                    </button> 
-                </form> 
-                <div class="budget-table"> 
-                    <table> 
-                        <thead> 
-                            <tr>
-                                <th>Category</th>
-                                <th style="padding: 0px;">Spending Limit / Balance Due</th> 
-                                <th>Amount left</th> 
-                                <th>Action</th> 
-                            </tr> 
-                        </thead> 
-                        <tbody id="budget-list"></tbody> 
-                    </table> 
+            
+                <!-- Income Container -->
+                <div class="col-xs-12 col-lg-7 finance-tracker-divs my-3 mt-5" style="margin: 0 auto;" id="incomeContainer"> 
+                    <h1 class="mb-3">Income</h1> 
+                    <form id="income-form"> 
+                        <input type="text" 
+                            id="income-name" 
+                            placeholder="Job Name" required /> 
+                        <input type="number" 
+                            id="income-amount" 
+                            step="0.01"
+                            max="10000000"
+                            placeholder="Amount" required /> 
+                        <button type="submit" class="rounded-4"> 
+                            Add Paycheck 
+                        </button> 
+                    </form> 
+                    <div class="income-table"> 
+                        <table> 
+                            <thead> 
+                                <tr> 
+                                    <th>Job Name</th> 
+                                    <th>Paycheck</th>
+                                    <th>Action</th> 
+                                </tr> 
+                            </thead> 
+                            <tbody id="income-list"></tbody> 
+                        </table> 
+                        <div class="total-amount"> 
+                            <strong>Total Made:</strong>  
+                            $<span id="total-amount-2">0</span> 
+                        </div> 
+                    </div> 
                 </div> 
-            </div>
-
-            <div class="row">
-
+                <div class="row">
                 <!-- Expense Container -->
                 <div class="col col-xs-12 finance-tracker-divs my-3" id="expenseContainer"> 
                     <h1 class="mb-3">Expenses</h1> 
@@ -148,41 +146,41 @@
                     </div> 
                 </div> 
 
-                <!-- Income Container -->
-                <div class="col col-xs-12 finance-tracker-divs my-3" id="incomeContainer"> 
-                    <h1 class="mb-3">Income</h1> 
-                    <form id="income-form"> 
-                        <input type="text" 
-                            id="income-name" 
-                            placeholder="Job Name" required /> 
+                <!-- Budget Container -->
+                <div class="col col-xs-12 finance-tracker-divs my-3" id="budgetContainer">
+                    <h1 class="mb-3">Budget Plan</h1>
+                    <form id="budget-form">
+                        <div class="dropdown">
+                            <button type="button" class="budgetBtn rounded-4">Categories</button>
+                            <div class="dropdown-content budget-content hidden">
+                            <!-- Menu Items will be dynamically added here -->
+                            </div>
+                        </div>
                         <input type="number" 
-                            id="income-amount" 
+                            id="budget-amount" 
                             step="0.01"
-                            max="10000000"
-                            placeholder="Amount" required /> 
+                            max="100000"
+                            placeholder="Amount"/> 
                         <button type="submit" class="rounded-4"> 
-                            Add Paycheck 
+                            Add Budget 
                         </button> 
                     </form> 
-                    <div class="income-table"> 
+                    <div class="budget-table"> 
                         <table> 
                             <thead> 
-                                <tr> 
-                                    <th>Job Name</th> 
-                                    <th>Paycheck</th>
+                                <tr>
+                                    <th>Category</th>
+                                    <th style="padding: 0px;">Spending Limit / Balance Due</th> 
+                                    <th>Amount left</th> 
                                     <th>Action</th> 
                                 </tr> 
                             </thead> 
-                            <tbody id="income-list"></tbody> 
+                            <tbody id="budget-list"></tbody> 
                         </table> 
-                        <div class="total-amount"> 
-                            <strong>Total Made:</strong>  
-                            $<span id="total-amount-2">0</span> 
-                        </div> 
                     </div> 
-                </div> 
-
+                </div>
             </div>
+
             <div class="row">
                 <!-- Bills -->
                 <div class="col col-xs-12 finance-tracker-divs my-3" id="billContainer"> 
