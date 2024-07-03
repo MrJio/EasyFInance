@@ -226,6 +226,7 @@ const renderIncomes = function() {
 }; 
 
 const renderSavings = function() {
+    savings.sort((a, b) => a.goal - b.goal);
     savingsList.innerHTML = "";
 
     savings.forEach((saving, index) => {
@@ -248,7 +249,6 @@ const renderSavings = function() {
     updateSavingsTotal();
     localStorage.setItem("savings", JSON.stringify(savings));
 };
-
 
 const renderBills = function() {
     bills.sort((a, b) => new Date(a.date) - new Date(b.date));
