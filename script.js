@@ -108,16 +108,19 @@ const renderBudgetTable = function() {
     const budgetList = document.getElementById("budget-list");
     budgetList.innerHTML = "";
 
-    budgets.forEach((budget, index) => {
+    const sortedBudgets = budgets.map((budget, index) => {
         const expensesForCategory = calculateExpensesByCategory(budget.category);
         const amountLeft = budget.limit - expensesForCategory;
+        return { ...budget, amountLeft, index };
+    }).sort((a, b) => a.amountLeft - b.amountLeft);
 
+    sortedBudgets.forEach((budget) => {
         const budgetRow = document.createElement("tr");
         budgetRow.innerHTML = `
             <td>${budget.category}</td>
             <td>$${budget.limit.toFixed(2)}</td>
-            <td>$${amountLeft.toFixed(2)}</td>
-            <td><span class="delete-budget-btn" data-index="${index}">Delete</span></td>
+            <td>$${budget.amountLeft.toFixed(2)}</td>
+            <td><span class="delete-budget-btn" data-index="${budget.index}">Delete</span></td>
         `;
         budgetList.appendChild(budgetRow);
     });
@@ -131,6 +134,7 @@ const renderBudgetTable = function() {
         });
     });
 };
+
 
 const renderExpenses = function() {
     expenseList.innerHTML = "";
