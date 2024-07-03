@@ -233,24 +233,8 @@ const renderSavings = function() {
     savings.forEach((saving, index) => {
         const savingsRow = document.createElement("tr");
 
-        let dropdownOptions = `
-            <div class="dropdown">
-                <button class="dropDownBtn rounded-3">Categories</button>
-                <div class="dropdown-content rounded-3 hidden">
-        `;
-
-        categories.forEach(category => {
-            dropdownOptions += `<a href="#">${category}</a>`;
-        });
-
-        dropdownOptions += `
-                </div>
-            </div>
-        `;
-
         savingsRow.innerHTML = `
             <td>${saving.name}</td>
-            <td class="category-cell">${saving.category ? saving.category : dropdownOptions}</td>
             <td>$${saving.goal.toFixed(2)}</td>
             <td>
                 <span class="amount-saved-span" data-index="${index}">$${saving.amountSaved.toFixed(2)}</span>
@@ -260,39 +244,13 @@ const renderSavings = function() {
         `;
 
         savingsList.appendChild(savingsRow);
-
-        if (!saving.category) {
-            const dropDownBtn = savingsRow.querySelector('.dropDownBtn');
-            const dropdownContent = savingsRow.querySelector('.dropdown-content');
-            dropDownBtn.addEventListener('click', () => {
-                hideAll_DD();
-
-                if (currentOpenDropdown && currentOpenDropdown !== dropdownContent) {
-                    currentOpenDropdown.classList.add('hidden');
-                }
-
-                dropdownContent.classList.toggle('hidden');
-
-                currentOpenDropdown = dropdownContent.classList.contains('hidden') ? null : dropdownContent;
-            });
-
-            dropdownContent.querySelectorAll('a').forEach(option => {
-                option.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const selectedCategory = e.target.textContent;
-                    saving.category = selectedCategory;
-                    localStorage.setItem("savings", JSON.stringify(savings));
-                    renderSavings();
-                });
-            });
-        }
     });
 
     totalAmountElement4.textContent = calculateTotalSavings().toFixed(2);
     updateSavingsTotal();
     localStorage.setItem("savings", JSON.stringify(savings));
-    hideAll_DD();
 };
+
 
 const renderBills = function() {
     billList.innerHTML = "";
@@ -396,7 +354,6 @@ const addSavings = function(event) {
         name: savingsName,
         goal: savingsGoal,
         amountSaved: 0,
-        category: null,
     };
 
     savings.push(saving);
