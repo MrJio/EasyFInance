@@ -255,11 +255,14 @@ const renderBills = function() {
 
     billList.innerHTML = "";
     bills.forEach((bill, index) => {
+        const dateObj = new Date(bill.date);
+        const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+
         const billRow = document.createElement("tr");
 
         billRow.innerHTML = `
             <td>
-                <span class="bill-date-span" data-index="${index}">${bill.date}</span>
+                <span class="bill-date-span" data-index="${index}">${formattedDate}</span>
                 <input type="date" class="bill-date-input hidden" data-index="${index}" value="${bill.date}">
             </td>
             <td>${bill.name}</td>
@@ -272,6 +275,7 @@ const renderBills = function() {
     totalAmountElement3.textContent = calculateTotalBills().toFixed(2);
     localStorage.setItem("bills", JSON.stringify(bills));
 };
+
 
 
 // ----------------------------------------------------------------------------------------------------------
