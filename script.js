@@ -136,7 +136,7 @@ const renderExpenses = function() {
     expenseList.innerHTML = "";
 
     let totalAmount = 0;
-    for (let i = 0; i < expenses.length; i++) {
+    for (let i = expenses.length - 1; i >= 0; i--) {
         const expense = expenses[i];
 
         let dropdownOptions = `
@@ -158,7 +158,7 @@ const renderExpenses = function() {
         expenseRow.innerHTML = `
             <td>${expense.name}</td>
             <td class="category-cell">${expense.category ? expense.category : dropdownOptions}</td>
-            <td>$${expense.amount}</td>
+            <td>$${expense.amount.toFixed(2)}</td>
             <td data-id="${i}"><span class="delete-btn">Delete</span> / <span class="dup-btn">Duplicate</span></td>
         `;
         expenseList.appendChild(expenseRow);
@@ -178,7 +178,6 @@ const renderExpenses = function() {
                 currentOpenDropdown = dropdownContent.classList.contains('hidden') ? null : dropdownContent;
             });
 
-
             dropdownContent.querySelectorAll('a').forEach(option => {
                 option.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -192,14 +191,13 @@ const renderExpenses = function() {
 
         totalAmount += expense.amount;
     }
-
     totalAmountElement.textContent = totalAmount.toFixed(2);
     localStorage.setItem("expenses", JSON.stringify(expenses));
-
     hideAll_DD();
     updateBalance();
     renderBudgetTable();
 };
+
 
 const renderIncomes = function() { 
     incomeList.innerHTML = ""; 
@@ -253,8 +251,9 @@ const renderSavings = function() {
 
 
 const renderBills = function() {
-    billList.innerHTML = "";
+    bills.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    billList.innerHTML = "";
     bills.forEach((bill, index) => {
         const billRow = document.createElement("tr");
 
@@ -270,10 +269,10 @@ const renderBills = function() {
 
         billList.appendChild(billRow);
     });
-
     totalAmountElement3.textContent = calculateTotalBills().toFixed(2);
     localStorage.setItem("bills", JSON.stringify(bills));
 };
+
 
 // ----------------------------------------------------------------------------------------------------------
 
