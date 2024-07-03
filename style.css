@@ -116,9 +116,15 @@ FONTS:
 }
 
 .header {
-    color: var(--white-text);;
     font-size: 4rem;
-    position: relative;
+}
+
+#headerInput {
+    flex;
+    font-size: 4rem;
+    width: 100%;
+    border: none;
+    outline: none;
 }
 
 .finance-tracker-divs {

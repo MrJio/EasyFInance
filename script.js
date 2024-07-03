@@ -1053,6 +1053,41 @@ function loadSavedFont() {
     }
 }
 
+// ----------------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const headerText = document.getElementById('headerText');
+    const headerInput = document.getElementById('headerInput');
+
+    // Load saved header text from localStorage
+    const savedHeader = localStorage.getItem('headerText');
+    if (savedHeader) {
+        headerText.textContent = savedHeader;
+    }
+
+    // Show input field when header is clicked
+    headerText.addEventListener('click', () => {
+        headerInput.value = headerText.textContent;
+        headerText.classList.add('hidden');
+        headerInput.classList.remove('hidden');
+        headerInput.focus();
+    });
+
+    // Save the header text and update localStorage on input blur
+    headerInput.addEventListener('blur', () => {
+        headerText.textContent = headerInput.value;
+        localStorage.setItem('headerText', headerInput.value);
+        headerText.classList.remove('hidden');
+        headerInput.classList.add('hidden');
+    });
+
+    // Optional: Save the header text when the user presses Enter
+    headerInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            headerInput.blur();
+        }
+    });
+});
 
 // ----------------------------------------------------------------------------------------------------------
 
