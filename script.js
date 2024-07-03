@@ -490,6 +490,14 @@ const deleteBill = function(event) {
     }
 };
 
+const deleteCategory = function(category) {
+    categories = categories.filter(cat => cat !== category);
+    saveCategoriesToLocalStorage();
+    renderDeleteCategoryDropdown();
+    addCategoryToDropDown();
+};
+
+
 
 // ----------------------------------------------------------------------------------------------------------
 
@@ -1058,13 +1066,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const headerText = document.getElementById('headerText');
     const headerInput = document.getElementById('headerInput');
 
-    // Load saved header text from localStorage
     const savedHeader = localStorage.getItem('headerText');
     if (savedHeader) {
         headerText.textContent = savedHeader;
     }
 
-    // Show input field when header is clicked
     headerText.addEventListener('click', () => {
         headerInput.value = headerText.textContent;
         headerText.classList.add('hidden');
@@ -1072,7 +1078,6 @@ document.addEventListener('DOMContentLoaded', () => {
         headerInput.focus();
     });
 
-    // Save the header text and update localStorage on input blur
     headerInput.addEventListener('blur', () => {
         headerText.textContent = headerInput.value;
         localStorage.setItem('headerText', headerInput.value);
@@ -1080,7 +1085,6 @@ document.addEventListener('DOMContentLoaded', () => {
         headerInput.classList.add('hidden');
     });
 
-    // Optional: Save the header text when the user presses Enter
     headerInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -1143,25 +1147,28 @@ const hideDeleteCategoryDD = function(){
     deleteCategoryDropdown.classList.add('hidden');
 };
 
-const showDeleteCategoryDD = function(e){
+const showDeleteCategoryDD = function(e) {
     e.preventDefault();
+    renderDeleteCategoryDropdown();
     deleteCategoryDropdown.classList.toggle('hidden');
-    if(!adjustBalance.classList.contains('hidden')){
+    if (!adjustBalance.classList.contains('hidden')) {
         hideBalanceDD();
     }
-    if(!addCategory.classList.contains('hidden')){
+    if (!addCategory.classList.contains('hidden')) {
         hideCategoryDD();
     }
-    if(!dropDownThemes.classList.contains('hidden')){
+    if (!dropDownThemes.classList.contains('hidden')) {
         hideThemeDD();
     }
-    if(!budgetDropdownContent.classList.contains('hidden')){
+    if (!budgetDropdownContent.classList.contains('hidden')) {
         hideBudgetDD();
     }
-    if(!dropDownFonts.classList.contains('hidden')){
+    if (!dropDownFonts.classList.contains('hidden')) {
         hideFontDD();
     }
+    localStorage.setItem('selectedNavItem', 'delete-category'); 
 };
+
 
 const showBudgetDD = function(){
     budgetDropdownContent.classList.toggle('hidden');
