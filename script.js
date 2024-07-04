@@ -235,12 +235,13 @@ const renderSavings = function() {
 
     savings.forEach((saving, index) => {
         const savingsRow = document.createElement("tr");
-
+        const amountSavedEqualsGoal = saving.amountSaved >= saving.goal;
+        const amountSavedClass = amountSavedEqualsGoal ? 'amount-saved-span green-text' : 'amount-saved-span';
         savingsRow.innerHTML = `
-            <td>${saving.name}</td>
-            <td>$${saving.goal.toFixed(2)}</td>
+            <td class="${amountSavedClass}">${saving.name}</td>
+            <td class="${amountSavedClass}">$${saving.goal.toFixed(2)}</td>
             <td>
-                <span class="amount-saved-span" data-index="${index}">$${saving.amountSaved.toFixed(2)}</span>
+                <span class="${amountSavedClass}" data-index="${index}">$${saving.amountSaved.toFixed(2)}</span>
                 <input type="number" class="amount-saved-input hidden" data-index="${index}" value="${saving.amountSaved.toFixed(2)}" step="0.01" min="0" max="1000000">
             </td>
             <td data-id="${index}"><span class="delete-savings-btn">Delete</span></td>
@@ -253,6 +254,7 @@ const renderSavings = function() {
     updateSavingsTotal();
     localStorage.setItem("savings", JSON.stringify(savings));
 };
+
 
 const renderBills = function() {
     bills.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -539,6 +541,7 @@ const updateSavedAmount = function(event) {
             alert("Please enter a valid number for the saved amount.");
         }
     }
+
 };
 
 const updateBillDate = function(event) {
@@ -1304,7 +1307,7 @@ savingsList.addEventListener("keydown", (event) => {
         } else {
             alert("Please enter a valid number for the saved amount (up to 1,000,000).");
         }
-
+        renderSavings();
         spanField.classList.remove('hidden');
         event.target.classList.add('hidden');
     }
@@ -1329,6 +1332,7 @@ document.addEventListener("click", (event) => {
 
             spanField.classList.remove('hidden');
             inputField.classList.add('hidden');
+            renderSavings();
         }
     });
 }, true);
