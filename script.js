@@ -262,8 +262,8 @@ const renderBills = function() {
     billList.innerHTML = "";
     bills.forEach((bill, index) => {
         const dateObj = new Date(bill.date);
+        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
         const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-
         const billRow = document.createElement("tr");
 
         billRow.innerHTML = `
@@ -275,10 +275,7 @@ const renderBills = function() {
             <td>$${bill.amount.toFixed(2)}</td>
             <td data-id="${index}"><span class="paid-btn">Paid</span> / <span class="dup-btn">Duplicate</span></td>
         `;
-
         billList.appendChild(billRow);
-
-        // Add event listener for the Paid button
         const paidBtn = billRow.querySelector(".paid-btn");
         paidBtn.addEventListener("click", function() {
             deleteBill(index);
