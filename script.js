@@ -277,12 +277,16 @@ const renderBills = function() {
         `;
 
         billList.appendChild(billRow);
+
+        // Add event listener for the Paid button
+        const paidBtn = billRow.querySelector(".paid-btn");
+        paidBtn.addEventListener("click", function() {
+            deleteBill(index);
+        });
     });
     totalAmountElement3.textContent = calculateTotalBills().toFixed(2);
     localStorage.setItem("bills", JSON.stringify(bills));
 };
-
-
 
 // ----------------------------------------------------------------------------------------------------------
 
@@ -447,13 +451,21 @@ const deleteBudget = function(event) {
 };
 document.getElementById("budget-list").addEventListener("click", deleteBudget);
 
-const deleteBill = function(event) {
-    if (event.target.classList.contains("paid-btn")) {
-        const billIndex = parseInt(event.target.parentElement.getAttribute("data-id"));
-        bills.splice(billIndex, 1);
+const deleteBill = function(index) {
+    const bill = bills[index];
 
-        renderBills();
-    }
+    const expense = {
+        name: bill.name,
+        amount: bill.amount,
+        category: null
+    };
+    expenses.push(expense);
+    bills.splice(index, 1);
+
+    localStorage.setItem("bills", JSON.stringify(bills));
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    renderBills();
+    renderExpenses();
 };
 
 const deleteCategory = function(category) {
